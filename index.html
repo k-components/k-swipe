@@ -1,4 +1,9 @@
-<index: element="k-swipe">
-	<div class="k-swipe">
-		<p>k-swipe</p>
-	</div>
+<index: tag="k-swipe">
+  <ul class="k-swipe {{if hide}}hidden{{/}}">
+    {{if prev}}
+      <li class="prev"><a as="prev" data-swipe="left" rel="prev" href="{{prev.url}}">{{prev.name}}</a></li>
+    {{/}}
+    {{if next}}
+      <li class="next"><a as="next" data-swipe="right" rel="next" href="{{next.url}}">{{next.name}}</a></li>
+    {{/}}
+  </ul>
