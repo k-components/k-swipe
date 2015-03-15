@@ -5,8 +5,11 @@
 
   module.exports = Swipe = (function() {
     function Swipe() {
-      this.handleTouchMove = __bind(this.handleTouchMove, this);
-      this.handleTouchStart = __bind(this.handleTouchStart, this);
+      this.click = __bind(this.click, this);
+      this.touchEnd = __bind(this.touchEnd, this);
+      this.touchMove = __bind(this.touchMove, this);
+      this.touchStart = __bind(this.touchStart, this);
+      this.translate = __bind(this.translate, this);
     }
 
     Swipe.prototype.view = __dirname;
@@ -22,34 +25,95 @@
     };
 
     Swipe.prototype.create = function() {
-      document.addEventListener('touchstart', this.handleTouchStart, false);
-      return document.addEventListener('touchmove', this.handleTouchMove, false);
+      document.addEventListener('touchstart', this.touchStart, false);
+      document.addEventListener('touchend', this.touchEnd, false);
+      document.addEventListener('touchmove', this.touchMove, false);
+      return this.root = document.getElementById('k-swipe-root') || document.body;
     };
 
-    Swipe.prototype.handleTouchStart = function(e) {
-      var _ref, _ref1, _ref2, _ref3;
-      this.xDown = (_ref = e.touches) != null ? (_ref1 = _ref[0]) != null ? _ref1.clientX : void 0 : void 0;
-      this.yDown = (_ref2 = e.touches) != null ? (_ref3 = _ref2[0]) != null ? _ref3.clientY : void 0 : void 0;
+    Swipe.prototype.destroy = function() {
+      document.removeEventListener('touchstart', this.touchStart);
+      document.removeEventListener('touchend', this.touchEnd);
+      return document.removeEventListener('touchmove', this.touchMove);
     };
 
-    Swipe.prototype.handleTouchMove = function(e) {
-      var xDiff, xUp, yDiff, yUp;
-      if (!this.xDown || !this.yDown || !e.touches) {
+    Swipe.prototype.translate = function(pix) {
+      var e;
+      console.log(pix);
+      e = this.root;
+      pix = pix * -1;
+      e.style['-webkit-transform'] = 'translate(' + pix + 'px, 0px)';
+      e.style['-moz-transform'] = 'translate(' + pix + 'px, 0px)';
+      e.style['-ms-transform'] = 'translate(' + pix + 'px, 0px)';
+      e.style['-o-transform'] = 'translate(' + pix + 'px, 0px)';
+      e.style['transform'] = 'translate(' + pix + 'px, 0px)';
+    };
+
+    Swipe.prototype.touchStart = function(e) {
+      var _ref, _ref1, _ref2, _ref3, _ref4;
+      if (!((_ref = e.touches) != null ? _ref[0] : void 0)) {
         return;
       }
-      xUp = e.touches[0].clientX;
-      yUp = e.touches[0].clientY;
+      this.xDown = (_ref1 = e.touches) != null ? (_ref2 = _ref1[0]) != null ? _ref2.clientX : void 0 : void 0;
+      this.yDown = (_ref3 = e.touches) != null ? (_ref4 = _ref3[0]) != null ? _ref4.clientY : void 0 : void 0;
+    };
+
+    Swipe.prototype.touchMove = function(e) {
+      var xDiff, xUp, yDiff, yUp, _ref;
+      if (!this.xDown || !this.yDown || !((_ref = e.changedTouches) != null ? _ref.length : void 0)) {
+        return;
+      }
+      xUp = e.changedTouches[0].clientX;
+      yUp = e.changedTouches[0].clientY;
       xDiff = this.xDown - xUp;
       yDiff = this.yDown - yUp;
-      if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        if (xDiff > 0) {
-          this.next.click();
-        } else {
-          this.prev.click();
-        }
+      if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > 50) {
+        return this.translate(xDiff);
       }
+    };
+
+    Swipe.prototype.touchEnd = function(e) {
+      var xDiff, xUp, yDiff, yUp, _ref;
+      if (!this.xDown || !this.yDown || !((_ref = e.changedTouches) != null ? _ref.length : void 0)) {
+        return;
+      }
+      xUp = e.changedTouches[0].clientX;
+      yUp = e.changedTouches[0].clientY;
+      xDiff = this.xDown - xUp;
+      yDiff = this.yDown - yUp;
       this.xDown = null;
       this.yDown = null;
+      if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff > 150) {
+          this.click(this.nextbutton);
+        } else if (xDiff < -150) {
+          this.click(this.prevbutton);
+        } else {
+          this.translate(0);
+        }
+      }
+    };
+
+    Swipe.prototype.click = function(el) {
+      var err, ev;
+      if (el != null ? el.href : void 0) {
+        this.destroy();
+        try {
+          ev = new window.MouseEvent('click', {
+            'view': window,
+            'bubbles': true,
+            'cancelable': true
+          });
+          return el.dispatchEvent(ev);
+        } catch (_error) {
+          err = _error;
+          ev = document.createEvent('MouseEvents');
+          ev.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+          return el.dispatchEvent(ev);
+        }
+      } else {
+        return this.translate(0);
+      }
     };
 
     return Swipe;
