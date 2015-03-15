@@ -22,7 +22,6 @@ module.exports = class Swipe
 		document.removeEventListener 'touchmove', @touchMove
 
 	translate: (pix) =>
-		console.log pix
 		e = @root
 		pix = pix * -1
 		e.style['-webkit-transform'] = 'translate(' + pix + 'px, 0px)'

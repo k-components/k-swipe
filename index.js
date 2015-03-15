@@ -39,7 +39,6 @@
 
     Swipe.prototype.translate = function(pix) {
       var e;
-      console.log(pix);
       e = this.root;
       pix = pix * -1;
       e.style['-webkit-transform'] = 'translate(' + pix + 'px, 0px)';
