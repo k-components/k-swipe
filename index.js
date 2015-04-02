@@ -49,12 +49,15 @@
     };
 
     Swipe.prototype.touchStart = function(e) {
-      var _ref, _ref1, _ref2, _ref3, _ref4;
+      var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
       if (!((_ref = e.touches) != null ? _ref[0] : void 0)) {
         return;
       }
-      this.xDown = (_ref1 = e.touches) != null ? (_ref2 = _ref1[0]) != null ? _ref2.clientX : void 0 : void 0;
-      this.yDown = (_ref3 = e.touches) != null ? (_ref4 = _ref3[0]) != null ? _ref4.clientY : void 0 : void 0;
+      if ((_ref1 = typeof document !== "undefined" && document !== null ? (_ref2 = document.activeElement) != null ? _ref2.nodeName : void 0 : void 0) === 'TEXTAREA' || _ref1 === 'INPUT') {
+        return;
+      }
+      this.xDown = (_ref3 = e.touches) != null ? (_ref4 = _ref3[0]) != null ? _ref4.clientX : void 0 : void 0;
+      this.yDown = (_ref5 = e.touches) != null ? (_ref6 = _ref5[0]) != null ? _ref6.clientY : void 0 : void 0;
     };
 
     Swipe.prototype.touchMove = function(e) {

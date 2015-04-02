@@ -31,9 +31,11 @@ module.exports = class Swipe
 		e.style['transform'] = 'translate(' + pix + 'px, 0px)'
 		return
 
-
 	touchStart: (e) =>
 		if !e.touches?[0]
+			return
+
+		if document?.activeElement?.nodeName in ['TEXTAREA', 'INPUT']
 			return
 
 		@xDown = e.touches?[0]?.clientX
