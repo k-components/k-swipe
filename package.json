@@ -1,7 +1,11 @@
 {
   "name": "k-swipe",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Kantele component template",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:k-components/k-swipe.git"
+  }
 }
