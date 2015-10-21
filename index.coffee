@@ -10,7 +10,10 @@ module.exports = class Swipe
 	init: ->
 		@model.set 'hide', !@model.get('show')
 
-	create: ->
+	create: (model) ->
+		if @page.params?.swipe
+			model.root.set '_page.swipefrom', 'swipe-from-' + @page.params.swipe
+
 		document.addEventListener 'touchstart', @touchStart, false
 		document.addEventListener 'touchend', @touchEnd, false
 		document.addEventListener 'touchmove', @touchMove, false

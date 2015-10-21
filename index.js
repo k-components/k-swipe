@@ -25,7 +25,11 @@
       return this.model.set('hide', !this.model.get('show'));
     };
 
-    Swipe.prototype.create = function() {
+    Swipe.prototype.create = function(model) {
+      var ref;
+      if ((ref = this.page.params) != null ? ref.swipe : void 0) {
+        model.root.set('_page.swipefrom', 'swipe-from-' + this.page.params.swipe);
+      }
       document.addEventListener('touchstart', this.touchStart, false);
       document.addEventListener('touchend', this.touchEnd, false);
       document.addEventListener('touchmove', this.touchMove, false);
