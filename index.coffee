@@ -16,10 +16,22 @@ module.exports = class Swipe
 		document.addEventListener 'touchmove', @touchMove, false
 		@root = document.getElementById('k-swipe-root') or document.body
 
+		document.body.addEventListener 'keydown', @keydown, false
+
 	destroy: ->
 		document.removeEventListener 'touchstart', @touchStart
 		document.removeEventListener 'touchend', @touchEnd
 		document.removeEventListener 'touchmove', @touchMove
+
+	# set left/right keys for prev/next post
+	keydown: (e) =>
+		t = e?.target or e?.srcElement
+		return if t?.nodeName isnt 'BODY'
+		key = e.keyCode
+		if key is 37
+			@click @prevbutton
+		else if key is 39
+			@click @nextbutton
 
 	translate: (pix) =>
 		e = @root
