@@ -1,2 +1,39 @@
 .k-swipe
 	display none
+	
+.swipe-left
+	animation 0.5s swipe-left ease
+
+.swipe-right
+	animation 0.5s swipe-right ease
+
+.swipe-from-right
+	animation 0.5s swipe-from-right ease
+
+.swipe-from-left
+	animation 0.5s swipe-from-left ease
+	overflow 
+
+@keyframes swipe-left
+	0%
+		transform translateX(0)
+	100%
+		transform translateX(100%)
+
+@keyframes swipe-right
+	0%
+		transform translateX(0)
+	100%
+		transform translateX(-100%)
+
+@keyframes swipe-from-left
+	0%
+		transform translateX(-100%)
+	100%
+		transform translateX(0)
+
+@keyframes swipe-from-right
+	0%
+		transform translateX(100%)
+	100%
+		transform translateX(0)
