@@ -1,11 +1,12 @@
 
 module.exports = class Swipe
 	view: __dirname
-
 	name: 'k-swipe'
 
 	xDown: null
 	yDown: null
+
+	X_THRESHOLD = 150
 
 	init: ->
 		@model.set 'hide', !@model.get('show')
@@ -14,6 +15,7 @@ module.exports = class Swipe
 		if @page.params?.swipe
 			model.root.set '_page.swipefrom', 'swipe-from-' + @page.params.swipe
 
+		# add the relevant listeners
 		document.addEventListener 'touchstart', @touchStart, false
 		document.addEventListener 'touchend', @touchEnd, false
 		document.addEventListener 'touchmove', @touchMove, false
@@ -22,6 +24,7 @@ module.exports = class Swipe
 		document.body.addEventListener 'keydown', @keydown, false
 
 	destroy: ->
+		# remove the listeners
 		document.removeEventListener 'touchstart', @touchStart
 		document.removeEventListener 'touchend', @touchEnd
 		document.removeEventListener 'touchmove', @touchMove
@@ -36,6 +39,7 @@ module.exports = class Swipe
 		else if key is 39
 			@click @nextbutton
 
+	# set the translate amount according to touch/move
 	translate: (pix) =>
 		e = @root
 		pix = pix * -1
@@ -46,6 +50,7 @@ module.exports = class Swipe
 		e.style['transform'] = 'translate(' + pix + 'px, 0px)'
 		return
 
+	# we are starting the move, set the coordinates
 	touchStart: (e) =>
 		if !e.touches?[0]
 			return
@@ -58,6 +63,7 @@ module.exports = class Swipe
 
 		return
 
+	# we are moving, calculate coordinates
 	touchMove: (e) =>
 		if !@xDown or !@yDown or !e.changedTouches?.length
 			return
@@ -70,6 +76,8 @@ module.exports = class Swipe
 		if Math.abs(xDiff) > Math.abs(yDiff) and Math.abs(xDiff) > 50
 			@translate xDiff
 
+	# touch end, act accordingly. if the coordinates exceed a certain threshold, 
+	# perform swipe
 	touchEnd: (e) =>
 
 		if !@xDown or !@yDown or !e.changedTouches?.length
@@ -85,14 +93,15 @@ module.exports = class Swipe
 
 		if Math.abs(xDiff) > Math.abs(yDiff)
 
-			if xDiff > 150
+			if xDiff > X_THRESHOLD
 				@click @nextbutton
-			else if xDiff < -150
+			else if xDiff < -X_THRESHOLD
 				@click @prevbutton
 			else
 				@translate 0
 		return
 
+	# send a click event to the appropriate element
 	click: (el) =>
 		if el?.href
 			@destroy()
