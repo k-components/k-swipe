@@ -98,6 +98,7 @@ module.exports = class Swipe
 			else if xDiff < -X_THRESHOLD
 				@click @prevbutton
 			else
+				# didn't exceed the limit so go to the normal state
 				@translate 0
 		return
 
